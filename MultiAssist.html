@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiAssist | Digital Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --sidebar: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        aside {
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content Styling */
+        main {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .home-view {
+            padding: 3rem;
+            overflow-y: auto;
+            display: block;
+        }
+
+        .readme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .readme-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .readme-card h3 { color: var(--primary); margin-top: 0; }
+        .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+        .btn-launch {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <aside>
+        <div class="brand"><h1>MultiAssist<span>.</span></h1></div>
+        <nav>
+            <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
+            <div class="nav-item" onclick="loadView('converter')">💱 FX & Metric</div>
+            <div class="nav-item" onclick="loadView('moneysplit')">💰 MoneySplit</div>
+            <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
+        </nav>
+    </aside>
+
+    <main>
+        <div id="home-view" class="home-view">
+            <header>
+                <h2 style="font-size: 2rem; color: var(--text-dark);">Welcome to MultiAssist Suite</h2>
+                <p style="color: var(--text-muted);">A professional toolkit for finance, logistics, and data management.</p>
+            </header>
+
+            <div class="readme-grid">
+                <div class="readme-card">
+                    <h3>FX & Metric Converter</h3>
+                    <p>Advanced conversion utility for international trade and local land measurements.</p>
+                    <ul>
+                        <li>Real-time Forex rates via API.</li>
+                        <li>Indian Regional land units (Guntha, Bigha, Kanal).</li>
+                        <li>Scientific units for Power and Pressure.</li>
+                    </ul>
+                    <button class="btn-launch" onclick="loadView('converter')">Open App</button>
+                </div>
+
+                <div class="readme-card">
+                    <h3>MoneySplit Buddy</h3>
+                    <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
+                    <ul>
+                        <li>Track group expenses by buddy name.</li>
+                        <li>Algorithm-based settlement plans.</li>
+                        <li>Export professional PDF reports.</li>
+                    </ul>
+                    <button class="btn-launch" onclick="loadView('moneysplit')">Open App</button>
+                </div>
+
+                <div class="readme-card">
+                    <h3>Data Cleansing Pro</h3>
+                    <p>Heavy-duty Excel/CSV processor for technical data standardization.</p>
+                    <ul>
+                        <li>Automated text & date normalization.</li>
+                        <li>Regex-based Find & Replace.</li>
+                        <li>Duplicate detection & mandatory field validation.</li>
+                    </ul>
+                    <button class="btn-launch" onclick="loadView('DataCleansing')">Open App</button>
+                </div>
+            </div>
+        </div>
+
+        <iframe id="app-frame" src=""></iframe>
+    </main>
+</div>
+
+<script>
+    function loadView(view) {
+        const frame = document.getElementById('app-frame');
+        const home = document.getElementById('home-view');
+        
+        // Update Nav UI
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if(item.innerText.toLowerCase().includes(view)) item.classList.add('active');
+        });
+
+        if (view === 'home') {
+            frame.style.display = 'none';
+            home.style.display = 'block';
+        } else {
+            home.style.display = 'none';
+            frame.style.display = 'block';
+            frame.src = view + '.html';
+        }
+    }
+</script>
+
+</body>
+</html>
