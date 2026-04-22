@@ -14,7 +14,50 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
         }
+/* Ticker Styling */
+.ticker-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #0f172a; /* Dark background to match your theme */
+    color: #fbbf24; /* Amber/Yellow text */
+    z-index: 9999;
+    height: 30px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
 
+.ticker-text {
+    white-space: nowrap;
+    padding-left: 100%;
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
+}
+
+/* Scrolling Animation */
+@keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* Flashing Color Animation */
+@keyframes flash {
+    0%, 100% { color: #fbbf24; opacity: 1; }
+    50% { color: #f87171; opacity: 0.8; } /* Flashes to a soft red */
+}
+
+/* Adjust Layout for Ticker */
+.layout {
+    margin-top: 30px; /* Shifts the whole app down so the ticker doesn't hide headers */
+    height: calc(100vh - 30px);
+}
         body, html {
             margin: 0; padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -127,7 +170,12 @@
     </style>
 </head>
 <body>
-
+    
+<div class="ticker-wrapper">
+    <div class="ticker-text">
+        ⚠️ Any Data entered is not stored in the application as there is no backend database. You are free to use this portal as per your needs !!! ⚠️
+    </div>
+</div>
 <div class="layout">
     <aside>
         <div class="brand"><h1>MultiAssist<span></span></h1></div>
