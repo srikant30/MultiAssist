@@ -1,49 +1,150 @@
-<footer>
-    <div class="visitor-counter">
-        <span>VISITORS:</span>
-        <span id="visit-count">Loading...</span>
-    </div>
-</footer>
-
-<script>
-    // Existing loadView function
-    function loadView(view) {
-        const frame = document.getElementById('app-frame');
-        const home = document.getElementById('home-view');
-        
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if(item.innerText.toLowerCase().includes(view.toLowerCase())) item.classList.add('active');
-        });
-
-        if (view === 'home') {
-            frame.style.display = 'none';
-            home.style.display = 'block';
-        } else {
-            home.style.display = 'none';
-            frame.style.display = 'block';
-            frame.src = view + '.html';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T4GFWQGQ');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiAssist | Digital Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --sidebar: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
-    }
 
-    // NEW: Robust Visitor Counter Script
-    // This uses CountAPI to increment and fetch hits without an image
-    function updateCounter() {
-        const countElement = document.getElementById('visit-count');
-        const namespace = "multiassist-digital-suite"; // Unique ID for your app
-        const key = "homepage-visits";
+        /* Ticker Styling */
+        .ticker-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #FFFFFF;
+            color: #FF0000;
+            z-index: 9999;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
 
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-            .then(res => res.json())
-            .then(data => {
-                countElement.innerText = data.value.toLocaleString();
-            })
-            .catch(err => {
-                console.error("Counter error:", err);
-                countElement.innerText = "Unavailable";
-            });
-    }
+        .ticker-text {
+            white-space: nowrap;
+            padding-left: 100%;
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
+        }
 
-    // Call the counter on page load
-    window.onload = updateCounter;
-</script>
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        @keyframes flash {
+            0%, 100% { color: #fbbf24; opacity: 1; }
+            50% { color: #f87171; opacity: 0.8; }
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: calc(100vh - 30px);
+            margin-top: 30px;
+        }
+
+        aside {
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        #app-frame {
+            width: 100%;
+            flex-grow: 1;
+            border: none;
+            display: none;
+        }
+
+        .home-view {
+            padding: 3rem;
+            overflow-y: auto;
+            display: block;
+            flex-grow: 1;
+        }
+
+        .readme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-bottom: 80px; /* Space for the footer */
+        }
+
+        .readme-card {
+            background: white
