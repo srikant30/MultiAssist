@@ -147,4 +147,172 @@
         }
 
         .readme-card {
-            background: white
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .readme-card h3 { color: var(--primary); margin-top: 0; }
+        .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+        .btn-launch {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Visitor Counter Footer */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: var(--sidebar);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .visitor-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        #visit-count {
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4GFWQGQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+    <div class="ticker-wrapper">
+        <div class="ticker-text">
+            ⚠️ Any Data entered is not stored in the application as there is no backend database. You are free to use this portal as per your needs !!! ⚠️
+        </div>
+    </div>
+
+    <div class="layout">
+        <aside>
+            <div class="brand"><h1>MultiAssist</h1></div>
+            <nav>
+                <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
+                <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
+                <div class="nav-item" onclick="loadView('MoneySplit')">💰 MoneySplit</div>
+                <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
+            </nav>
+        </aside>
+
+        <main>
+            <div id="home-view" class="home-view">
+                <header>
+                    <h2 style="font-size: 2rem; color: var(--text-dark);">Welcome to MultiAssist Suite</h2>
+                    <p style="color: var(--text-muted);">A professional toolkit for finance, logistics, and data management.</p>
+                </header>
+
+                <div class="readme-grid">
+                    <div class="readme-card">
+                        <h3>FX & Metric Converter</h3>
+                        <p>Advanced conversion utility for international trade and local land measurements.</p>
+                        <ul>
+                            <li>Real-time Forex rates via API.</li>
+                            <li>Indian Regional land units (Guntha, Bigha, Kanal).</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('Converter')">Open App</button>
+                    </div>
+
+                    <div class="readme-card">
+                        <h3>MoneySplit Buddy</h3>
+                        <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
+                        <ul>
+                            <li>Track group expenses.</li>
+                            <li>Algorithm-based settlement plans.</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
+                    </div>
+
+                    <div class="readme-card">
+                        <h3>Data Cleansing Pro</h3>
+                        <p>Heavy-duty Excel/CSV processor for technical data standardization.</p>
+                        <ul>
+                            <li>Automated text & date normalization.</li>
+                            <li>Duplicate detection & validation.</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('DataCleansing')">Open App</button>
+                    </div>
+                </div>
+            </div>
+
+            <iframe id="app-frame" src=""></iframe>
+
+            <footer>
+                <div class="visitor-counter">
+                    <span>VISITORS</span>
+                    <span id="visit-count">...</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // View Navigation Logic
+        function loadView(view) {
+            const frame = document.getElementById('app-frame');
+            const home = document.getElementById('home-view');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if(item.innerText.toLowerCase().includes(view.toLowerCase())) item.classList.add('active');
+            });
+
+            if (view === 'home') {
+                frame.style.display = 'none';
+                home.style.display = 'block';
+            } else {
+                home.style.display = 'none';
+                frame.style.display = 'block';
+                frame.src = view + '.html';
+            }
+        }
+
+        // Visitor Counter Logic (Text-based to avoid broken images)
+        async function initCounter() {
+            const countDisplay = document.getElementById('visit-count');
+            try {
+                // Using a public counting API (No backend required)
+                // Replacing with a highly reliable open-source hit counter
+                const response = await fetch('https://api.counterapi.dev/v1/multiassist_digital/global/up');
+                const data = await response.json();
+                countDisplay.innerText = data.count.toLocaleString();
+            } catch (error) {
+                console.error('Counter Error:', error);
+                countDisplay.innerText = 'Online'; 
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initCounter);
+    </script>
+</body>
+</html>
