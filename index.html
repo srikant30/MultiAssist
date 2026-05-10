@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T4GFWQGQ');</script>
-    <!-- End Google Tag Manager -->
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MultiAssist | Digital Suite</title>
@@ -22,50 +19,44 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
         }
-/* Ticker Styling */
-.ticker-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: #FFFFFF; /* White background to match your theme */
-    color: #FF0000; /* RED text */
-    z-index: 9999;
-    height: 30px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-}
 
-.ticker-text {
-    white-space: nowrap;
-    padding-left: 100%;
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
-}
+        /* Ticker Styling */
+        .ticker-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #FFFFFF;
+            color: #FF0000;
+            z-index: 9999;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
 
-/* Scrolling Animation */
-@keyframes ticker {
-    0% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-100%, 0, 0); }
-}
+        .ticker-text {
+            white-space: nowrap;
+            padding-left: 100%;
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
+        }
 
-/* Flashing Color Animation */
-@keyframes flash {
-    0%, 100% { color: #fbbf24; opacity: 1; }
-    50% { color: #f87171; opacity: 0.8; } /* Flashes to a soft red */
-}
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
 
-/* Adjust Layout for Ticker */
-.layout {
-    margin-top: 30px; /* Shifts the whole app down so the ticker doesn't hide headers */
-    height: calc(100vh - 30px);
-}
+        @keyframes flash {
+            0%, 100% { color: #fbbf24; opacity: 1; }
+            50% { color: #f87171; opacity: 0.8; }
+        }
+
         body, html {
             margin: 0; padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -77,10 +68,10 @@
         .layout {
             display: grid;
             grid-template-columns: 280px 1fr;
-            height: 100vh;
+            height: calc(100vh - 30px); /* Adjust for ticker */
+            margin-top: 30px;
         }
 
-        /* Sidebar Styling */
         aside {
             background: var(--sidebar);
             border-right: 1px solid var(--border);
@@ -126,16 +117,16 @@
             color: white;
         }
 
-        /* Main Content Styling */
         main {
-            height: 100vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            position: relative; /* For footer positioning */
         }
 
         #app-frame {
             width: 100%;
-            height: 100%;
+            flex-grow: 1;
             border: none;
             display: none;
         }
@@ -144,6 +135,7 @@
             padding: 3rem;
             overflow-y: auto;
             display: block;
+            flex-grow: 1;
         }
 
         .readme-grid {
@@ -151,6 +143,7 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
+            padding-bottom: 60px; /* Space for footer */
         }
 
         .readme-card {
@@ -175,98 +168,124 @@
             cursor: pointer;
             width: 100%;
         }
+
+        /* Visitor Counter Footer Styling */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: var(--sidebar);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .visitor-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4GFWQGQ"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->    
-<div class="ticker-wrapper">
-    <div class="ticker-text">
-        ⚠️ Any Data entered is not stored in the application as there is no backend database. You are free to use this portal as per your needs !!! ⚠️
+    
+    <div class="ticker-wrapper">
+        <div class="ticker-text">
+            ⚠️ Any Data entered is not stored in the application as there is no backend database. You are free to use this portal as per your needs !!! ⚠️
+        </div>
     </div>
-</div>
-<div class="layout">
-    <aside>
-        <div class="brand"><h1>MultiAssist<span></span></h1></div>
-        <nav>
-            <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
-            <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
-            <div class="nav-item" onclick="loadView('MoneySplit')">💰 MoneySplit</div>
-            <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
-        </nav>
-    </aside>
 
-    <main>
-        <div id="home-view" class="home-view">
-            <header>
-                <h2 style="font-size: 2rem; color: var(--text-dark);">Welcome to MultiAssist Suite</h2>
-                <p style="color: var(--text-muted);">A professional toolkit for finance, logistics, and data management.</p>
-            </header>
+    <div class="layout">
+        <aside>
+            <div class="brand"><h1>MultiAssist</h1></div>
+            <nav>
+                <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
+                <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
+                <div class="nav-item" onclick="loadView('MoneySplit')">💰 MoneySplit</div>
+                <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
+            </nav>
+        </aside>
 
-            <div class="readme-grid">
-                <div class="readme-card">
-                    <h3>FX & Metric Converter</h3>
-                    <p>Advanced conversion utility for international trade and local land measurements.</p>
-                    <ul>
-                        <li>Real-time Forex rates via API.</li>
-                        <li>Indian Regional land units (Guntha, Bigha, Kanal).</li>
-                        <li>Scientific units for Power and Pressure.</li>
-                    </ul>
-                    <button class="btn-launch" onclick="loadView('Converter')">Open App</button>
-                </div>
+        <main>
+            <div id="home-view" class="home-view">
+                <header>
+                    <h2 style="font-size: 2rem; color: var(--text-dark);">Welcome to MultiAssist Suite</h2>
+                    <p style="color: var(--text-muted);">A professional toolkit for finance, logistics, and data management.</p>
+                </header>
 
-                <div class="readme-card">
-                    <h3>MoneySplit Buddy</h3>
-                    <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
-                    <ul>
-                        <li>Track group expenses by buddy name.</li>
-                        <li>Algorithm-based settlement plans.</li>
-                        <li>Export professional PDF reports.</li>
-                    </ul>
-                    <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
-                </div>
+                <div class="readme-grid">
+                    <div class="readme-card">
+                        <h3>FX & Metric Converter</h3>
+                        <p>Advanced conversion utility for international trade and local land measurements.</p>
+                        <ul>
+                            <li>Real-time Forex rates via API.</li>
+                            <li>Indian Regional land units (Guntha, Bigha, Kanal).</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('Converter')">Open App</button>
+                    </div>
 
-                <div class="readme-card">
-                    <h3>Data Cleansing Pro</h3>
-                    <p>Heavy-duty Excel/CSV processor for technical data standardization.</p>
-                    <ul>
-                        <li>Automated text & date normalization.</li>
-                        <li>Regex-based Find & Replace.</li>
-                        <li>Duplicate detection & mandatory field validation.</li>
-                    </ul>
-                    <button class="btn-launch" onclick="loadView('DataCleansing')">Open App</button>
+                    <div class="readme-card">
+                        <h3>MoneySplit Buddy</h3>
+                        <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
+                        <ul>
+                            <li>Track group expenses.</li>
+                            <li>Algorithm-based settlement.</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
+                    </div>
+
+                    <div class="readme-card">
+                        <h3>Data Cleansing Pro</h3>
+                        <p>Heavy-duty Excel/CSV processor.</p>
+                        <ul>
+                            <li>Text & date normalization.</li>
+                            <li>Regex-based Find & Replace.</li>
+                        </ul>
+                        <button class="btn-launch" onclick="loadView('DataCleansing')">Open App</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <iframe id="app-frame" src=""></iframe>
-    </main>
-</div>
+            <iframe id="app-frame" src=""></iframe>
 
-<script>
-    function loadView(view) {
-        const frame = document.getElementById('app-frame');
-        const home = document.getElementById('home-view');
-        
-        // Update Nav UI
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if(item.innerText.toLowerCase().includes(view)) item.classList.add('active');
-        });
+            <footer>
+                <div class="visitor-counter">
+                    <span>VISITORS:</span>
+                    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fmultiassist.suite&count_bg=%232563EB&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" alt="Visitor Counter"/>
+                </div>
+            </footer>
+        </main>
+    </div>
 
-        if (view === 'home') {
-            frame.style.display = 'none';
-            home.style.display = 'block';
-        } else {
-            home.style.display = 'none';
-            frame.style.display = 'block';
-            frame.src = view + '.html';
+    <script>
+        function loadView(view) {
+            const frame = document.getElementById('app-frame');
+            const home = document.getElementById('home-view');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if(item.innerText.toLowerCase().includes(view.toLowerCase())) item.classList.add('active');
+            });
+
+            if (view === 'home') {
+                frame.style.display = 'none';
+                home.style.display = 'block';
+            } else {
+                home.style.display = 'none';
+                frame.style.display = 'block';
+                frame.src = view + '.html';
+            }
         }
-    }
-</script>
-
+    </script>
 </body>
 </html>
