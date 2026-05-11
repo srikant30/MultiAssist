@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Password Vault</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --danger: #d9534f;
+            --success: #28a745;
+            --dark: #343a40;
+        }
+        body { font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; padding: 20px; background: #f0f2f5; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 100%; max-width: 420px; }
+        
+        h3 { text-align: center; margin-top: 0; color: var(--dark); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        label { font-size: 0.8rem; color: #555; font-weight: 700; display: block; margin-top: 15px; text-transform: uppercase; }
+        
+        input { 
+            width: 100%; padding: 12px; margin: 5px 0; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1rem;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: #fdfeff; }
+
+        /* Permanent Salt Section for visibility */
+        .salt-area { background: #fff9db; padding: 10px; border-radius: 6px; border: 1px solid #fab005; margin-top: 15px; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; background: #f8f9fa; padding: 10px; border-radius: 6px; }
+        .opt { display: flex; align-items: center; font-size: 0.85rem; cursor: pointer; }
+        .opt input { width: auto; margin-right: 8px; }
+
+        button { width: 100%; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; margin-top: 10px; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: white; }
+        .btn-main:hover { background: #0056b3; }
+        
+        .result-container { 
+            margin-top: 25px; padding: 20px; border: 2px solid #ffc9c9; border-radius: 8px; background: #fff5f5; text-align: center; 
+        }
+        #passwordDisplay { 
+            font-family: 'Courier New', monospace; font-size: 1.5rem; font-weight: bold; color: var(--danger); word-break: break-all; margin-bottom: 15px; min-height: 1.5em;
+        }
+        #wipeStatus { color: var(--danger); font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; height: 1.2em; }
+        
+        .button-group { display: flex; gap: 8px; }
+        .btn-sub { background: var(--dark); color: white; font-size: 0.8rem; flex: 1; }
+        button:disabled { background: #ccc !important; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>Password Converter</h3>
+    
+    <label>1. Input Text (Max 20)</label>
+    <input type="text" id="masterInput" placeholder="Enter secret word" maxlength="20">
+
+    <label>2. Service Name</label>
+    <input type="text" id="serviceInput" placeholder="e.g. Gmail">
+
+    <div class="salt-area">
+        <label style="margin-top:0; color:#856404;">3. Secret Salt (Advanced Key)</label>
+        <input type="password" id="saltInput" placeholder="Extra secret layer">
+    </div>
+
+    <div class="options-grid">
+        <label class="opt"><input type="checkbox" id="up" checked> Uppercase</label>
+        <label class="opt"><input type="checkbox" id="low" checked> Lowercase</label>
+        <label class="opt"><input type="checkbox" id="num" checked> Numbers</label>
+        <label class="opt"><input type="checkbox" id="sym" checked> Symbols</label>
+    </div>
+
+    <button class="btn-main" onclick="generate()">CONVERT TO 14 DIGITS</button>
+
+    <div class="result-container">
+        <div id="passwordDisplay">---</div>
+        <div id="wipeStatus"></div>
+        <div class="button-group">
+            <button id="copyBtn" class="btn-sub" onclick="handleCopy()" disabled>Copy & Clear</button>
+            <button id="toggleBtn" class="btn-sub" onclick="handleToggle()" disabled>Show/Hide</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activePass = "";
+    let showing = true;
+    let timer = null;
+
+    function generate() {
+        // Clear any existing wipe timers
+        clearInterval(timer);
+        document.getElementById('wipeStatus').innerText = "";
+        
+        const raw = document.getElementById('masterInput').value;
+        const svc = document.getElementById('serviceInput').value.toLowerCase();
+        const salt = document.getElementById('saltInput').value;
+
+        if (!raw) return alert("Please enter Input Text!");
+
+        // Build character pool
+        let pool = "";
+        if(document.getElementById('up').checked) pool += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if(document.getElementById('low').checked) pool += "abcdefghijklmnopqrstuvwxyz";
+        if(document.getElementById('num').checked) pool += "0123456789";
+        if(document.getElementById('sym').checked) pool += "!@#$%^&*()_+-=";
+        if(!pool) pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        // Logic
+        const combined = raw + svc + salt;
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+            hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+            hash |= 0;
+        }
+
+        let result = "";
+        for (let i = 0; i < 14; i++) {
+            let index = Math.abs((hash + i * combined.length + (combined.charCodeAt(i % combined.length) || i)) % pool.length);
+            result += pool.charAt(index);
+        }
+
+        activePass = result;
+        showing = true;
+        document.getElementById('copyBtn').disabled = false;
+        document.getElementById('toggleBtn').disabled = false;
+        updateUI();
+    }
+
+    function updateUI() {
+        const display = document.getElementById('passwordDisplay');
+        if (!activePass) {
+            display.innerText = "---";
+            document.getElementById('copyBtn').disabled = true;
+            document.getElementById('toggleBtn').disabled = true;
+        } else {
+            display.innerText = showing ? activePass : "••••••••••••••";
+        }
+    }
+
+    function handleToggle() {
+        showing = !showing;
+        updateUI();
+    }
+
+    function handleCopy() {
+        if (!activePass) return;
+
+        // Copy
+        navigator.clipboard.writeText(activePass).then(() => {
+            const btn = document.getElementById('copyBtn');
+            const status = document.getElementById('wipeStatus');
+            btn.innerText = "COPIED!";
+            btn.style.background = "#28a745";
+
+            // Wipe sequence
+            let count = 5;
+            status.innerText = `⚠️ SYSTEM WIPE IN ${count}s`;
+            
+            timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    status.innerText = `⚠️ SYSTEM WIPE IN ${count}s`;
+                } else {
+                    // EXPLICIT WIPE
+                    activePass = "";
+                    updateUI();
+                    status.innerText = "MEMORY CLEARED";
+                    btn.innerText = "Copy & Clear";
+                    btn.style.background = "#343a40";
+                    clearInterval(timer);
+                }
+            }, 1000);
+        });
+    }
+</script>
+
+</body>
+</html>
