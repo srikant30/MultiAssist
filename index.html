@@ -24,6 +24,8 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
             --card: #ffffff;
+            --danger: #ef4444;
+            --success: #10b981;
         }
 
         /* Ticker Styling */
@@ -69,20 +71,33 @@
         .readme-card h3 { color: var(--primary); margin-top: 0; }
         .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
-        /* PDF Toolkit Tool Grid */
+        /* Tool Grids */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 20px; padding-bottom: 100px; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.2rem; }
         .card p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.85rem; line-height: 1.5; }
 
+        /* Password Specific Styles */
+        .salt-area { background: #fff9db; padding: 15px; border-radius: 12px; border: 1px solid #fab005; margin: 15px 0; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; background: #f8f9fa; padding: 15px; border-radius: 12px; }
+        .opt { display: flex; align-items: center; font-size: 0.85rem; cursor: pointer; color: var(--text-dark); }
+        .opt input { width: auto !important; margin-right: 8px; margin-bottom: 0 !important; }
+        .meter-container { height: 6px; background: #eee; border-radius: 3px; margin: -5px 0 15px; overflow: hidden; }
+        #meter { height: 100%; width: 0%; transition: 0.3s; }
+        .result-container { margin-top: 25px; padding: 20px; border: 2px solid #ffc9c9; border-radius: 15px; background: #fff5f5; text-align: center; }
+        #passwordDisplay { font-family: 'Courier New', monospace; font-size: 1.5rem; font-weight: bold; color: var(--danger); margin-bottom: 10px; min-height: 1.5em; }
+        #wipeStatus { color: var(--danger); font-size: 0.75rem; font-weight: 800; height: 1.2em; margin-bottom: 10px; }
+        .btn-group { display: flex; gap: 10px; }
+
         /* Form Elements */
         input[type=file], input[type=text], input[type=password], input[type=number] {
-            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem;
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem; box-sizing: border-box;
         }
         button, .btn-launch {
             width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
         button:hover { opacity: 0.9; }
+        button:disabled { background: #cbd5e1 !important; cursor: not-allowed; }
         .status { margin-top: 10px; color: #10b981; font-size: 0.8rem; font-weight: 600; }
 
         /* Footer */
@@ -105,6 +120,7 @@
             <nav>
                 <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
                 <div class="nav-item" onclick="loadView('PDFToolkit')">📄 PDF Toolkit</div>
+                <div class="nav-item" onclick="loadView('PassGen')">🔑 Password Vault</div>
                 <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
                 <div class="nav-item" onclick="loadView('MoneySplit')">💰 MoneySplit</div>
                 <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
@@ -119,6 +135,17 @@
                 </header>
 
                 <div class="readme-grid">
+                    <div class="readme-card">
+                        <h3>Password Vault</h3>
+                        <p>Deterministic 14-digit password generator with salt security.</p>
+                        <ul>
+                            <li>Deterministic generation (No database).</li>
+                            <li>Custom Secret Salt layer.</li>
+                            <li>Auto-wipe security timer.</li>
+                        </ul>
+                        <button class="btn-launch" style="margin-top:15px" onclick="loadView('PassGen')">Open Vault</button>
+                    </div>
+
                     <div class="readme-card">
                         <h3>PDF Toolkit</h3>
                         <p>Complete PDF manipulation without server uploads.</p>
@@ -139,26 +166,6 @@
                         </ul>
                         <button class="btn-launch" style="margin-top:15px" onclick="loadView('Converter')">Open App</button>
                     </div>
-
-                    <div class="readme-card">
-                        <h3>MoneySplit Buddy</h3>
-                        <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
-                        <ul>
-                            <li>Track group expenses.</li>
-                            <li>Algorithm-based settlement plans.</li>
-                        </ul>
-                        <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
-                    </div>
-                    
-                    <div class="readme-card">
-                        <h3>Data Cleansing Pro</h3>
-                        <p>Standardize technical Excel/CSV data.</p>
-                        <ul>
-                            <li>Text & Date normalization.</li>
-                            <li>Regex Find & Replace.</li>
-                        </ul>
-                        <button class="btn-launch" style="margin-top:15px" onclick="loadView('DataCleansing')">Open App</button>
-                    </div>
                 </div>
             </div>
 
@@ -167,65 +174,67 @@
                     <h2 style="font-size: 2rem; color: var(--text-dark);">📄 PDF Toolkit</h2>
                     <p style="color: var(--text-muted);">Secure, local PDF processing.</p>
                 </header>
-
                 <div class="tool-grid">
                     <div class="card">
                         <h2>Merge PDFs</h2>
-                        <p>Combine multiple files into one.</p>
                         <input type="file" id="mergeFiles" multiple accept=".pdf">
                         <button onclick="mergePDFs()">Merge PDFs</button>
                         <div class="status" id="mergeStatus"></div>
                     </div>
-
                     <div class="card">
                         <h2>Split PDF</h2>
-                        <p>Extract a specific page.</p>
                         <input type="file" id="splitFile" accept=".pdf">
                         <input type="number" id="pageNumber" placeholder="Page Number">
                         <button onclick="splitPDF()">Extract Page</button>
                         <div class="status" id="splitStatus"></div>
                     </div>
-
-                    <div class="card">
-                        <h2>Compress PDF</h2>
-                        <p>Optimize file size.</p>
-                        <input type="file" id="compressFile" accept=".pdf">
-                        <button onclick="compressPDF()">Compress PDF</button>
-                        <div class="status" id="compressStatus"></div>
-                    </div>
-
-                    <div class="card">
-                        <h2>Add Watermark</h2>
-                        <p>Add text to every page.</p>
-                        <input type="file" id="watermarkFile" accept=".pdf">
-                        <input type="text" id="watermarkText" placeholder="Watermark Text">
-                        <button onclick="watermarkPDF()">Add Watermark</button>
-                        <div class="status" id="watermarkStatus"></div>
-                    </div>
-
-                    <div class="card">
-                        <h2>PDF to JPG</h2>
-                        <p>Convert pages to images.</p>
-                        <input type="file" id="pdfToJpgFile" accept=".pdf">
-                        <button onclick="pdfToJPG()">Convert to JPG</button>
-                        <div class="status" id="pdfToJpgStatus"></div>
-                    </div>
-
                     <div class="card">
                         <h2>Protect PDF</h2>
-                        <p>Add password security.</p>
                         <input type="file" id="protectPdfFile" accept=".pdf">
                         <input type="password" id="pdfPassword" placeholder="Set Password">
                         <button onclick="protectPDF()">Encrypt PDF</button>
                         <div class="status" id="protectStatus"></div>
                     </div>
+                    </div>
+            </div>
 
+            <div id="PassGen-view" class="view-content">
+                <header>
+                    <h2 style="font-size: 2rem; color: var(--text-dark);">🔑 Password Vault</h2>
+                    <p style="color: var(--text-muted);">Convert text to secure 14-character passwords locally.</p>
+                </header>
+                
+                <div style="max-width: 500px; margin-top: 20px;">
                     <div class="card">
-                        <h2>PDF to Excel</h2>
-                        <p>Extract text data to XLSX.</p>
-                        <input type="file" id="pdfToExcelFile" accept=".pdf">
-                        <button onclick="pdfToExcel()">Extract to Excel</button>
-                        <div class="status" id="excelStatus"></div>
+                        <label>1. INPUT TEXT (Max 20)</label>
+                        <input type="text" id="masterInput" placeholder="Enter secret word" maxlength="20" oninput="updateStrength()">
+                        <div class="meter-container"><div id="meter"></div></div>
+
+                        <label>2. SERVICE NAME</label>
+                        <input type="text" id="serviceInput" placeholder="e.g. Gmail, Bank">
+
+                        <div class="salt-area">
+                            <label style="margin-top:0; color:#856404;">3. SECRET SALT (Advanced Key)</label>
+                            <input type="password" id="saltInput" placeholder="Extra secret layer">
+                        </div>
+
+                        <div class="options-grid">
+                            <label class="opt"><input type="checkbox" id="up" checked> Uppercase</label>
+                            <label class="opt"><input type="checkbox" id="low" checked> Lowercase</label>
+                            <label class="opt"><input type="checkbox" id="num" checked> Numbers</label>
+                            <label class="opt"><input type="checkbox" id="sym" checked> Symbols</label>
+                        </div>
+
+                        <button onclick="generatePass()">CONVERT TO 14 DIGITS</button>
+
+                        <div class="result-container">
+                            <div id="passwordDisplay">---</div>
+                            <div id="wipeStatus"></div>
+                            <div class="btn-group">
+                                <button id="copyBtn" style="background:#475569" onclick="handleCopy()" disabled>Copy & Clear</button>
+                                <button id="toggleBtn" style="background:#475569" onclick="handleToggle()" disabled>Show/Hide</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,34 +252,124 @@
 
     <script>
         const { PDFDocument, rgb, degrees } = PDFLib;
+        let activePass = "";
+        let showing = true;
+        let wipeTimer = null;
 
         function loadView(view) {
             const frame = document.getElementById('app-frame');
             const home = document.getElementById('home-view');
             const pdfView = document.getElementById('PDFToolkit-view');
+            const passView = document.getElementById('PassGen-view');
             
-            // UI Updates
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
                 if(item.innerText.toLowerCase().includes(view.toLowerCase())) item.classList.add('active');
             });
 
-            // View Logic
             frame.style.display = 'none';
             home.style.display = 'none';
             pdfView.style.display = 'none';
+            passView.style.display = 'none';
 
-            if (view === 'home') {
-                home.style.display = 'block';
-            } else if (view === 'PDFToolkit') {
-                pdfView.style.display = 'block';
-            } else {
+            if (view === 'home') home.style.display = 'block';
+            else if (view === 'PDFToolkit') pdfView.style.display = 'block';
+            else if (view === 'PassGen') passView.style.display = 'block';
+            else {
                 frame.style.display = 'block';
                 frame.src = view + '.html';
             }
         }
 
-        // PDF TOOLKIT LOGIC
+        // --- PASSWORD VAULT LOGIC ---
+        function updateStrength() {
+            const val = document.getElementById('masterInput').value;
+            const meter = document.getElementById('meter');
+            let width = (val.length / 20) * 100;
+            meter.style.width = width + "%";
+            meter.style.background = width < 40 ? "#ef4444" : (width < 75 ? "#f59e0b" : "#10b981");
+        }
+
+        function generatePass() {
+            clearInterval(wipeTimer);
+            document.getElementById('wipeStatus').innerText = "";
+            const btn = document.getElementById('copyBtn');
+            btn.innerText = "Copy & Clear";
+            btn.style.background = "#475569";
+
+            const raw = document.getElementById('masterInput').value;
+            const svc = document.getElementById('serviceInput').value.toLowerCase();
+            const salt = document.getElementById('saltInput').value;
+
+            if (!raw) return alert("Please enter Input Text!");
+
+            let pool = "";
+            if(document.getElementById('up').checked) pool += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if(document.getElementById('low').checked) pool += "abcdefghijklmnopqrstuvwxyz";
+            if(document.getElementById('num').checked) pool += "0123456789";
+            if(document.getElementById('sym').checked) pool += "!@#$%^&*()_+-=";
+            if(!pool) pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            const combined = raw + svc + salt;
+            let hash = 0;
+            for (let i = 0; i < combined.length; i++) {
+                hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+                hash |= 0;
+            }
+
+            let result = "";
+            for (let i = 0; i < 14; i++) {
+                let index = Math.abs((hash + i * combined.length + (combined.charCodeAt(i % combined.length) || i)) % pool.length);
+                result += pool.charAt(index);
+            }
+
+            activePass = result;
+            showing = true;
+            document.getElementById('copyBtn').disabled = false;
+            document.getElementById('toggleBtn').disabled = false;
+            updatePassUI();
+        }
+
+        function updatePassUI() {
+            const display = document.getElementById('passwordDisplay');
+            if (!activePass) {
+                display.innerText = "---";
+                document.getElementById('copyBtn').disabled = true;
+                document.getElementById('toggleBtn').disabled = true;
+            } else {
+                display.innerText = showing ? activePass : "••••••••••••••";
+            }
+        }
+
+        function handleToggle() { showing = !showing; updatePassUI(); }
+
+        function handleCopy() {
+            if (!activePass) return;
+            navigator.clipboard.writeText(activePass).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const status = document.getElementById('wipeStatus');
+                btn.innerText = "COPIED!";
+                btn.style.background = "#10b981";
+
+                let count = 5;
+                status.innerText = `⚠️ SYSTEM WIPE IN ${count}s`;
+                wipeTimer = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        status.innerText = `⚠️ SYSTEM WIPE IN ${count}s`;
+                    } else {
+                        activePass = "";
+                        updatePassUI();
+                        status.innerText = "MEMORY CLEARED";
+                        btn.innerText = "Copy & Clear";
+                        btn.style.background = "#475569";
+                        clearInterval(wipeTimer);
+                    }
+                }, 1000);
+            });
+        }
+
+        // --- PDF TOOLKIT LOGIC ---
         function downloadFile(bytes, filename) {
             const blob = new Blob([bytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
@@ -293,62 +392,6 @@
             document.getElementById('mergeStatus').innerText = "Merged successfully.";
         }
 
-        async function splitPDF() {
-            const file = document.getElementById('splitFile').files[0];
-            const pageNumber = parseInt(document.getElementById('pageNumber').value);
-            if (!file || !pageNumber) { alert("Select PDF and page number."); return; }
-            const pdf = await PDFDocument.load(await file.arrayBuffer());
-            if (pageNumber > pdf.getPageCount()) { alert("Invalid page."); return; }
-            const newPdf = await PDFDocument.create();
-            const [copiedPage] = await newPdf.copyPages(pdf, [pageNumber - 1]);
-            newPdf.addPage(copiedPage);
-            downloadFile(await newPdf.save(), 'Extracted.pdf');
-            document.getElementById('splitStatus').innerText = "Extracted successfully.";
-        }
-
-        async function compressPDF() {
-            const file = document.getElementById('compressFile').files[0];
-            if (!file) return;
-            const pdf = await PDFDocument.load(await file.arrayBuffer());
-            const compressed = await pdf.save({ useObjectStreams: true });
-            downloadFile(compressed, 'Compressed.pdf');
-            document.getElementById('compressStatus').innerText = "Compressed successfully.";
-        }
-
-        async function watermarkPDF() {
-            const file = document.getElementById('watermarkFile').files[0];
-            const text = document.getElementById('watermarkText').value;
-            if (!file || !text) return;
-            const pdf = await PDFDocument.load(await file.arrayBuffer());
-            pdf.getPages().forEach(page => {
-                const { width, height } = page.getSize();
-                page.drawText(text, { x: width/4, y: height/2, size: 40, color: rgb(0.7, 0.7, 0.7), rotate: degrees(-45), opacity: 0.4 });
-            });
-            downloadFile(await pdf.save(), 'Watermarked.pdf');
-            document.getElementById('watermarkStatus').innerText = "Watermarked successfully.";
-        }
-
-        async function pdfToJPG() {
-            const file = document.getElementById('pdfToJpgFile').files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function() {
-                const pdf = await pdfjsLib.getDocument(new Uint8Array(this.result)).promise;
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 2 });
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = viewport.width; canvas.height = viewport.height;
-                    await page.render({ canvasContext: context, viewport: viewport }).promise;
-                    const a = document.createElement('a');
-                    a.href = canvas.toDataURL('image/jpeg'); a.download = `Page_${i}.jpg`; a.click();
-                }
-                document.getElementById('pdfToJpgStatus').innerText = "Converted successfully.";
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
         async function protectPDF() {
             const file = document.getElementById('protectPdfFile').files[0];
             const password = document.getElementById('pdfPassword').value;
@@ -359,28 +402,7 @@
             document.getElementById('protectStatus').innerText = "Protected successfully.";
         }
 
-        async function pdfToExcel() {
-            const file = document.getElementById('pdfToExcelFile').files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async function() {
-                const pdf = await pdfjsLib.getDocument(new Uint8Array(this.result)).promise;
-                let data = [];
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    data.push({ Page: i, Content: content.items.map(item => item.str).join(' ') });
-                }
-                const ws = XLSX.utils.json_to_sheet(data);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "PDF Data");
-                XLSX.writeFile(wb, "PDF_Export.xlsx");
-                document.getElementById('excelStatus').innerText = "Excel export successful.";
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        // Visitor Counter
+        // --- VISITOR COUNTER ---
         async function initCounter() {
             const countDisplay = document.getElementById('visit-count');
             try {
