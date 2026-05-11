@@ -1,1191 +1,184 @@
-
-
-
-
-Pasted text(4).txt
-Document
-
-Pasted text (2).txt
-Document
-in the multiassit website, add menu option and functionality for pdftool assist
-
-Add the following code changes to your index.html of the MultiAssist portal to integrate the PDF Toolkit menu and functionality. Your current dashboard structure is in 
-
- and the PDF Toolkit app code is in 
-
-.
-
-1. Add New Menu Item in Sidebar
-Inside the <nav> section, add this line:
-
-<div class="nav-item" onclick="loadView('PDFToolkit')">📄 PDFTool Assist</div>
-Your updated sidebar should look like this:
-
-<nav>
-    <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
-    <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
-    <div class="nav-item" onclick="loadView('MoneySplit')">💰 MoneySplit</div>
-    <div class="nav-item" onclick="loadView('DataCleansing')">🧹 Data Cleansing</div>
-    <div class="nav-item" onclick="loadView('PDFToolkit')">📄 PDFTool Assist</div>
-</nav>
-2. Add PDF Toolkit Card on Home Dashboard
-Inside the <div class="readme-grid"> section, add this new card:
-
-<div class="readme-card">
-    <h3>PDFTool Assist</h3>
-
-    <p>
-        Advanced browser-based PDF utility toolkit for daily office use.
-    </p>
-
-    <ul>
-        <li>Merge & Split PDFs</li>
-        <li>PDF to JPG Conversion</li>
-        <li>Password Protect PDFs</li>
-        <li>PDF to Excel Extraction</li>
-        <li>Watermark & Compression</li>
-    </ul>
-
-    <button class="btn-launch"
-            onclick="loadView('PDFToolkit')">
-        Open App
-    </button>
-</div>
-3. Save PDF Toolkit File
-Save the complete PDF Toolkit code from 
-
- as:
-
-PDFToolkit.html
-Place it in the same directory as:
-
-index.html
-
-Converter.html
-
-MoneySplit.html
-
-DataCleansing.html
-
-4. Add Missing HTML Sections for Password Protect & PDF to Excel
-Your JavaScript already contains these functions:
-
-protectPDF()
-
-pdfToExcel()
-
-But the HTML cards are missing.
-
-Add these TWO cards inside <div class="tool-grid"> in PDFToolkit.html.
-
-Password Protect PDF Card
-<div class="card">
-
-    <h2>Password Protect PDF</h2>
-
-    <p>
-        Add password protection to PDF documents.
-    </p>
-
-    <input type="file"
-           id="protectPdfFile"
-           accept=".pdf">
-
-    <input type="password"
-           id="pdfPassword"
-           placeholder="Enter Password">
-
-    <button onclick="protectPDF()">
-        Protect PDF
-    </button>
-
-    <div class="status" id="protectStatus"></div>
-
-</div>
-PDF to Excel Card
-<div class="card">
-
-    <h2>PDF to Excel</h2>
-
-    <p>
-        Extract PDF text content into Excel format.
-    </p>
-
-    <input type="file"
-           id="pdfToExcelFile"
-           accept=".pdf">
-
-    <button onclick="pdfToExcel()">
-        Convert to Excel
-    </button>
-
-    <div class="status" id="excelStatus"></div>
-
-</div>
-5. Final Result
-After adding this:
-
-Sidebar will show:
-
-📄 PDFTool Assist
-
-Dashboard card will appear
-
-Clicking it loads:
-
-PDFToolkit.html
-
-Fully browser-based
-
-No backend/database required
-
-Works perfectly with your MultiAssist architecture
-
-
-remove JavaScript for protectPDF() and pdfToExcel().
-Also give me a single code file
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <!-- Google Tag Manager -->
-    <script>
-    (function(w,d,s,l,i){
-        w[l]=w[l]||[];
-        w[l].push({
-            'gtm.start': new Date().getTime(),
-            event:'gtm.js'
-        });
-        var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),
-        dl=l!='dataLayer'?'&l='+l:'';
-
-        j.async=true;
-        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-        f.parentNode.insertBefore(j,f);
-
-    })(window,document,'script','dataLayer','GTM-T4GFWQGQ');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>MultiAssist | Digital Suite</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- PDF LIB -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-
-    <!-- PDF JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-<style>
-
-:root{
-    --primary:#2563eb;
-    --bg:#f8fafc;
-    --sidebar:#ffffff;
-    --text-dark:#0f172a;
-    --text-muted:#64748b;
-    --border:#e2e8f0;
-    --card:#ffffff;
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --sidebar: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+/* Ticker Styling */
+.ticker-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #0f172a; /* Dark background to match your theme */
+    color: #fbbf24; /* Amber/Yellow text */
+    z-index: 9999;
+    height: 30px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+.ticker-text {
+    white-space: nowrap;
+    padding-left: 100%;
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
 }
 
-body,html{
-    font-family:'Plus Jakarta Sans',sans-serif;
-    background:var(--bg);
-    height:100vh;
-    overflow:hidden;
+/* Scrolling Animation */
+@keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
 }
 
-/* =========================
-   TICKER
-========================= */
-
-.ticker-wrapper{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    background:#fff;
-    color:red;
-    z-index:9999;
-    height:30px;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    border-bottom:1px solid var(--border);
+/* Flashing Color Animation */
+@keyframes flash {
+    0%, 100% { color: #fbbf24; opacity: 1; }
+    50% { color: #f87171; opacity: 0.8; } /* Flashes to a soft red */
 }
 
-.ticker-text{
-    white-space:nowrap;
-    padding-left:100%;
-    display:inline-block;
-    font-size:0.75rem;
-    font-weight:700;
-    animation:ticker 25s linear infinite;
+/* Adjust Layout for Ticker */
+.layout {
+    margin-top: 30px; /* Shifts the whole app down so the ticker doesn't hide headers */
+    height: calc(100vh - 30px);
 }
-
-@keyframes ticker{
-    0%{transform:translateX(0);}
-    100%{transform:translateX(-100%);}
-}
-
-/* =========================
-   LAYOUT
-========================= */
-
-.layout{
-    display:grid;
-    grid-template-columns:280px 1fr;
-    height:calc(100vh - 30px);
-    margin-top:30px;
-}
-
-aside{
-    background:var(--sidebar);
-    border-right:1px solid var(--border);
-    padding:2rem;
-    overflow-y:auto;
-}
-
-.brand h1{
-    color:var(--primary);
-    font-size:1.8rem;
-    margin-bottom:2rem;
-}
-
-nav{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.nav-item{
-    padding:0.9rem 1rem;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
-    color:var(--text-muted);
-    transition:0.2s;
-}
-
-.nav-item:hover{
-    background:#f1f5f9;
-}
-
-.nav-item.active{
-    background:var(--primary);
-    color:#fff;
-}
-
-/* =========================
-   MAIN
-========================= */
-
-main{
-    overflow-y:auto;
-    padding:2rem;
-}
-
-.section{
-    display:none;
-}
-
-.section.active{
-    display:block;
-}
-
-/* =========================
-   HOME CARDS
-========================= */
-
-.readme-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:2rem;
-    margin-top:2rem;
-}
-
-.readme-card{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:2rem;
-    box-shadow:0 4px 6px rgba(0,0,0,0.05);
-}
-
-.readme-card h3{
-    color:var(--primary);
-    margin-bottom:1rem;
-}
-
-.readme-card p{
-    color:var(--text-muted);
-    margin-bottom:1rem;
-}
-
-.readme-card ul{
-    padding-left:1.2rem;
-    color:var(--text-muted);
-    line-height:1.8;
-}
-
-.btn-launch{
-    margin-top:1rem;
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:var(--primary);
-    color:#fff;
-    font-weight:700;
-    cursor:pointer;
-}
-
-/* =========================
-   PDF TOOLKIT
-========================= */
-
-.tool-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:25px;
-    margin-top:30px;
-}
-
-.card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:25px;
-    box-shadow:0 4px 6px rgba(0,0,0,0.05);
-}
-
-.card h2{
-    color:var(--primary);
-    margin-bottom:15px;
-}
-
-.card p{
-    color:var(--text-muted);
-    margin-bottom:15px;
-    line-height:1.5;
-}
-
-input[type=file],
-input[type=text],
-input[type=number]{
-    width:100%;
-    padding:12px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    margin-bottom:15px;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:var(--primary);
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-}
-
-.status{
-    margin-top:12px;
-    color:green;
-    font-size:0.85rem;
-}
-
-.footer-note{
-    margin-top:30px;
-    background:white;
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:15px;
-    text-align:center;
-    color:var(--text-muted);
-}
-
-</style>
-</head>
-
-<body>
-
-<noscript>
-<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4GFWQGQ"
-height="0"
-width="0"
-style="display:none;visibility:hidden"></iframe>
-</noscript>
-
-<div class="ticker-wrapper">
-    <div class="ticker-text">
-        ⚠️ No backend database used. Files are processed directly in browser. Nothing is uploaded to server. ⚠️
-    </div>
-</div>
-
-<div class="layout">
-
-    <!-- SIDEBAR -->
-    <aside>
-
-        <div class="brand">
-            <h1>MultiAssist</h1>
-        </div>
-
-        <nav>
-
-            <div class="nav-item active"
-                 onclick="showSection('home',this)">
-                 🏠 Home Dashboard
-            </div>
-
-            <div class="nav-item"
-                 onclick="showSection('pdfToolkit',this)">
-                 📄 PDFTool Assist
-            </div>
-
-        </nav>
-
-    </aside>
-
-    <!-- MAIN -->
-    <main>
-
-        <!-- HOME -->
-        <div id="home" class="section active">
-
-            <h2 style="font-size:2rem;color:var(--text-dark);">
-                Welcome to MultiAssist Suite
-            </h2>
-
-            <p style="color:var(--text-muted);margin-top:10px;">
-                Professional browser-based utility toolkit.
-            </p>
-
-            <div class="readme-grid">
-
-                <div class="readme-card">
-
-                    <h3>PDFTool Assist</h3>
-
-                    <p>
-                        Complete browser-based PDF utility toolkit.
-                    </p>
-
-                    <ul>
-                        <li>Merge PDFs</li>
-                        <li>Split PDFs</li>
-                        <li>Compress PDFs</li>
-                        <li>Watermark PDFs</li>
-                        <li>PDF to JPG</li>
-                    </ul>
-
-                    <button class="btn-launch"
-                            onclick="activatePDFTool()">
-                        Open App
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- PDF TOOLKIT -->
-        <div id="pdfToolkit" class="section">
-
-            <h1 style="color:var(--primary);">
-                📄 PDFTool Assist
-            </h1>
-
-            <p style="margin-top:10px;color:var(--text-muted);">
-                Browser-based PDF toolkit. No files uploaded anywhere.
-            </p>
-
-            <div class="tool-grid">
-
-                <!-- MERGE -->
-                <div class="card">
-
-                    <h2>Merge PDFs</h2>
-
-                    <p>
-                        Combine multiple PDFs into one document.
-                    </p>
-
-                    <input type="file"
-                           id="mergeFiles"
-                           multiple
-                           accept=".pdf">
-
-                    <button onclick="mergePDFs()">
-                        Merge PDFs
-                    </button>
-
-                    <div class="status"
-                         id="mergeStatus"></div>
-
-                </div>
-
-                <!-- SPLIT -->
-                <div class="card">
-
-                    <h2>Split PDF</h2>
-
-                    <p>
-                        Extract a specific page from PDF.
-                    </p>
-
-                    <input type="file"
-                           id="splitFile"
-                           accept=".pdf">
-
-                    <input type="number"
-                           id="pageNumber"
-                           placeholder="Enter Page Number">
-
-                    <button onclick="splitPDF()">
-                        Extract Page
-                    </button>
-
-                    <div class="status"
-                         id="splitStatus"></div>
-
-                </div>
-
-                <!-- COMPRESS -->
-                <div class="card">
-
-                    <h2>Compress PDF</h2>
-
-                    <p>
-                        Reduce PDF size for sharing.
-                    </p>
-
-                    <input type="file"
-                           id="compressFile"
-                           accept=".pdf">
-
-                    <button onclick="compressPDF()">
-                        Compress PDF
-                    </button>
-
-                    <div class="status"
-                         id="compressStatus"></div>
-
-                </div>
-
-                <!-- WATERMARK -->
-                <div class="card">
-
-                    <h2>Add Watermark</h2>
-
-                    <p>
-                        Add custom watermark to all pages.
-                    </p>
-
-                    <input type="file"
-                           id="watermarkFile"
-                           accept=".pdf">
-
-                    <input type="text"
-                           id="watermarkText"
-                           placeholder="Enter Watermark Text">
-
-                    <button onclick="watermarkPDF()">
-                        Add Watermark
-                    </button>
-
-                    <div class="status"
-                         id="watermarkStatus"></div>
-
-                </div>
-
-                <!-- PDF TO JPG -->
-                <div class="card">
-
-                    <h2>PDF to JPG</h2>
-
-                    <p>
-                        Convert PDF pages to JPG images.
-                    </p>
-
-                    <input type="file"
-                           id="pdfToJpgFile"
-                           accept=".pdf">
-
-                    <button onclick="pdfToJPG()">
-                        Convert to JPG
-                    </button>
-
-                    <div class="status"
-                         id="pdfToJpgStatus"></div>
-
-                </div>
-
-            </div>
-
-            <div class="footer-note">
-                🔒 100% Browser Processed |
-                No Backend |
-                No Server Upload
-            </div>
-
-        </div>
-
-    </main>
-
-</div>
-
-<script>
-
-const { PDFDocument, rgb, degrees } = PDFLib;
-
-/* =========================
-   NAVIGATION
-========================= */
-
-function showSection(sectionId, element){
-
-    document.querySelectorAll('.section')
-        .forEach(sec => {
-            sec.classList.remove('active');
-        });
-
-    document.getElementById(sectionId)
-        .classList.add('active');
-
-    document.querySelectorAll('.nav-item')
-        .forEach(nav => {
-            nav.classList.remove('active');
-        });
-
-    element.classList.add('active');
-}
-
-function activatePDFTool(){
-
-    document.querySelectorAll('.section')
-        .forEach(sec => {
-            sec.classList.remove('active');
-        });
-
-    document.getElementById('pdfToolkit')
-        .classList.add('active');
-
-    document.querySelectorAll('.nav-item')
-        .forEach(nav => {
-            nav.classList.remove('active');
-        });
-
-    document.querySelectorAll('.nav-item')[1]
-        .classList.add('active');
-}
-
-/* =========================
-   DOWNLOAD HELPER
-========================= */
-
-function downloadFile(bytes, filename){
-
-    const blob = new Blob([bytes], {
-        type:'application/pdf'
-    });
-
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-
-    a.href = url;
-    a.download = filename;
-    a.click();
-
-    URL.revokeObjectURL(url);
-}
-
-/* =========================
-   MERGE PDFs
-========================= */
-
-async function mergePDFs(){
-
-    const files =
-        document.getElementById('mergeFiles').files;
-
-    if(files.length < 2){
-
-        alert("Select at least 2 PDFs.");
-        return;
-    }
-
-    const mergedPdf =
-        await PDFDocument.create();
-
-    for(const file of files){
-
-        const bytes =
-            await file.arrayBuffer();
-
-        const pdf =
-            await PDFDocument.load(bytes);
-
-        const copiedPages =
-            await mergedPdf.copyPages(
-                pdf,
-                pdf.getPageIndices()
-            );
-
-        copiedPages.forEach(page => {
-            mergedPdf.addPage(page);
-        });
-    }
-
-    const mergedBytes =
-        await mergedPdf.save();
-
-    downloadFile(
-        mergedBytes,
-        'Merged.pdf'
-    );
-
-    document.getElementById('mergeStatus')
-        .innerText =
-        "PDFs merged successfully.";
-}
-
-/* =========================
-   SPLIT PDF
-========================= */
-
-async function splitPDF(){
-
-    const file =
-        document.getElementById('splitFile').files[0];
-
-    const pageNumber =
-        parseInt(
-            document.getElementById('pageNumber').value
-        );
-
-    if(!file || !pageNumber){
-
-        alert("Select PDF and page number.");
-        return;
-    }
-
-    const bytes =
-        await file.arrayBuffer();
-
-    const pdf =
-        await PDFDocument.load(bytes);
-
-    if(pageNumber > pdf.getPageCount()){
-
-        alert("Invalid page number.");
-        return;
-    }
-
-    const newPdf =
-        await PDFDocument.create();
-
-    const [copiedPage] =
-        await newPdf.copyPages(
-            pdf,
-            [pageNumber - 1]
-        );
-
-    newPdf.addPage(copiedPage);
-
-    const newBytes =
-        await newPdf.save();
-
-    downloadFile(
-        newBytes,
-        'Extracted_Page.pdf'
-    );
-
-    document.getElementById('splitStatus')
-        .innerText =
-        "Page extracted successfully.";
-}
-
-/* =========================
-   COMPRESS PDF
-========================= */
-
-async function compressPDF(){
-
-    const file =
-        document.getElementById('compressFile').files[0];
-
-    if(!file){
-
-        alert("Select PDF.");
-        return;
-    }
-
-    const bytes =
-        await file.arrayBuffer();
-
-    const pdf =
-        await PDFDocument.load(bytes);
-
-    const compressedBytes =
-        await pdf.save({
-            useObjectStreams:true
-        });
-
-    downloadFile(
-        compressedBytes,
-        'Compressed.pdf'
-    );
-
-    document.getElementById('compressStatus')
-        .innerText =
-        "PDF compressed successfully.";
-}
-
-/* =========================
-   WATERMARK PDF
-========================= */
-
-async function watermarkPDF(){
-
-    const file =
-        document.getElementById('watermarkFile').files[0];
-
-    const watermarkText =
-        document.getElementById('watermarkText').value;
-
-    if(!file || !watermarkText){
-
-        alert("Select PDF and watermark text.");
-        return;
-    }
-
-    const bytes =
-        await file.arrayBuffer();
-
-    const pdf =
-        await PDFDocument.load(bytes);
-
-    const pages =
-        pdf.getPages();
-
-    pages.forEach(page => {
-
-        const { width, height } =
-            page.getSize();
-
-        page.drawText(watermarkText,{
-
-            x:width/4,
-            y:height/2,
-            size:40,
-            color:rgb(0.75,0.75,0.75),
-            rotate:degrees(-45),
-            opacity:0.4
-        });
-
-    });
-
-    const newBytes =
-        await pdf.save();
-
-    downloadFile(
-        newBytes,
-        'Watermarked.pdf'
-    );
-
-    document.getElementById('watermarkStatus')
-        .innerText =
-        "Watermark added successfully.";
-}
-
-/* =========================
-   PDF TO JPG
-========================= */
-
-async function pdfToJPG(){
-
-    const file =
-        document.getElementById('pdfToJpgFile').files[0];
-
-    if(!file){
-
-        alert("Select PDF.");
-        return;
-    }
-
-    const reader =
-        new FileReader();
-
-    reader.onload = async function(){
-
-        const typedArray =
-            new Uint8Array(this.result);
-
-        const pdf =
-            await pdfjsLib
-            .getDocument(typedArray)
-            .promise;
-
-        for(let i=1; i<=pdf.numPages; i++){
-
-            const page =
-                await pdf.getPage(i);
-
-            const viewport =
-                page.getViewport({scale:2});
-
-            const canvas =
-                document.createElement('canvas');
-
-            const context =
-                canvas.getContext('2d');
-
-            canvas.width =
-                viewport.width;
-
-            canvas.height =
-                viewport.height;
-
-            await page.render({
-                canvasContext:context,
-                viewport:viewport
-            }).promise;
-
-            const imgData =
-                canvas.toDataURL('image/jpeg');
-
-            const a =
-                document.createElement('a');
-
-            a.href = imgData;
-            a.download = `Page_${i}.jpg`;
-            a.click();
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            height: 100vh;
+            overflow: hidden;
         }
 
-        document.getElementById('pdfToJpgStatus')
-            .innerText =
-            "PDF converted successfully.";
-    };
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+        }
 
-    reader.readAsArrayBuffer(file);
-}
+        /* Sidebar Styling */
+        aside {
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-</script>
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: -1px;
+        }
 
-</body>
-</html>
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
+        .nav-item {
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    /* Ticker Styling */
-    .ticker-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background: #FFFFFF;
-        color: #FF0000;
-        z-index: 9999;
-        height: 30px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid var(--border);
-    }
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
 
-    .ticker-text {
-        white-space: nowrap;
-        padding-left: 100%;
-        display: inline-block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        animation: ticker 25s linear infinite, flash 1.5s ease-in-out infinite;
-    }
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
 
-    @keyframes ticker {
-        0% { transform: translate3d(0, 0, 0); }
-        100% { transform: translate3d(-100%, 0, 0); }
-    }
+        /* Main Content Styling */
+        main {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    @keyframes flash {
-        0%, 100% { color: #fbbf24; opacity: 1; }
-        50% { color: #f87171; opacity: 0.8; }
-    }
+        #app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
 
-    body, html {
-        margin: 0; padding: 0;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: var(--bg);
-        height: 100vh;
-        overflow: hidden;
-    }
+        .home-view {
+            padding: 3rem;
+            overflow-y: auto;
+            display: block;
+        }
 
-    .layout {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        height: calc(100vh - 30px);
-        margin-top: 30px;
-    }
+        .readme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
 
-    aside {
-        background: var(--sidebar);
-        border-right: 1px solid var(--border);
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+        .readme-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
 
-    .brand h1 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--primary);
-        margin: 0;
-        letter-spacing: -1px;
-    }
+        .readme-card h3 { color: var(--primary); margin-top: 0; }
+        .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
-    nav {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .nav-item {
-        padding: 0.8rem 1rem;
-        border-radius: 12px;
-        cursor: pointer;
-        color: var(--text-muted);
-        font-weight: 600;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .nav-item:hover {
-        background: #f1f5f9;
-        color: var(--text-dark);
-    }
-
-    .nav-item.active {
-        background: var(--primary);
-        color: white;
-    }
-
-    main {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-
-    #app-frame {
-        width: 100%;
-        flex-grow: 1;
-        border: none;
-        display: none;
-    }
-
-    .home-view {
-        padding: 3rem;
-        overflow-y: auto;
-        display: block;
-        flex-grow: 1;
-    }
-
-    .readme-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-        padding-bottom: 80px; /* Space for the footer */
-    }
-
-    .readme-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        border: 1px solid var(--border);
-    }
-
-    .readme-card h3 { color: var(--primary); margin-top: 0; }
-    .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
-
-    .btn-launch {
-        margin-top: 1rem;
-        padding: 0.6rem 1.2rem;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 700;
-        cursor: pointer;
-        width: 100%;
-    }
-
-    /* Visitor Counter Footer */
-    footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        background: var(--sidebar);
-        border-top: 1px solid var(--border);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-    }
-
-    .visitor-counter {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        font-weight: 700;
-        letter-spacing: 1px;
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-
-    #visit-count {
-        color: var(--primary);
-        background: #eff6ff;
-        padding: 2px 8px;
-        border-radius: 4px;
-    }
-</style>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4GFWQGQ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
+        .btn-launch {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    
 <div class="ticker-wrapper">
     <div class="ticker-text">
         ⚠️ Any Data entered is not stored in the application as there is no backend database. You are free to use this portal as per your needs !!! ⚠️
     </div>
 </div>
-
 <div class="layout">
     <aside>
-        <div class="brand"><h1>MultiAssist</h1></div>
+        <div class="brand"><h1>MultiAssist<span></span></h1></div>
         <nav>
             <div class="nav-item active" onclick="loadView('home')">🏠 Home Dashboard</div>
             <div class="nav-item" onclick="loadView('Converter')">💱 FX & Metric</div>
@@ -1208,6 +201,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <ul>
                         <li>Real-time Forex rates via API.</li>
                         <li>Indian Regional land units (Guntha, Bigha, Kanal).</li>
+                        <li>Scientific units for Power and Pressure.</li>
                     </ul>
                     <button class="btn-launch" onclick="loadView('Converter')">Open App</button>
                 </div>
@@ -1216,8 +210,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <h3>MoneySplit Buddy</h3>
                     <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
                     <ul>
-                        <li>Track group expenses.</li>
+                        <li>Track group expenses by buddy name.</li>
                         <li>Algorithm-based settlement plans.</li>
+                        <li>Export professional PDF reports.</li>
                     </ul>
                     <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
                 </div>
@@ -1227,7 +222,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <p>Heavy-duty Excel/CSV processor for technical data standardization.</p>
                     <ul>
                         <li>Automated text & date normalization.</li>
-                        <li>Duplicate detection & validation.</li>
+                        <li>Regex-based Find & Replace.</li>
+                        <li>Duplicate detection & mandatory field validation.</li>
                     </ul>
                     <button class="btn-launch" onclick="loadView('DataCleansing')">Open App</button>
                 </div>
@@ -1235,25 +231,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
 
         <iframe id="app-frame" src=""></iframe>
-
-        <footer>
-            <div class="visitor-counter">
-                <span>VISITORS COUNT</span>
-                <span id="visit-count">...</span>
-            </div>
-        </footer>
     </main>
 </div>
 
 <script>
-    // View Navigation Logic
     function loadView(view) {
         const frame = document.getElementById('app-frame');
         const home = document.getElementById('home-view');
         
+        // Update Nav UI
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
-            if(item.innerText.toLowerCase().includes(view.toLowerCase())) item.classList.add('active');
+            if(item.innerText.toLowerCase().includes(view)) item.classList.add('active');
         });
 
         if (view === 'home') {
@@ -1265,24 +254,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             frame.src = view + '.html';
         }
     }
-
-    // Visitor Counter Logic (Text-based to avoid broken images)
-    async function initCounter() {
-        const countDisplay = document.getElementById('visit-count');
-        try {
-            // Using a public counting API (No backend required)
-            // Replacing with a highly reliable open-source hit counter
-            const response = await fetch('https://api.counterapi.dev/v1/multiassist_digital/global/up');
-            const data = await response.json();
-            countDisplay.innerText = data.count.toLocaleString();
-        } catch (error) {
-            console.error('Counter Error:', error);
-            countDisplay.innerText = 'Online'; 
-        }
-    }
-
-    // Initialize on load
-    window.addEventListener('DOMContentLoaded', initCounter);
 </script>
 
-Close
+</body>
+</html>
