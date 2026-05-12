@@ -58,23 +58,40 @@
         .nav-item:hover { background: #f1f5f9; color: var(--text-dark); }
         .nav-item.active { background: var(--primary); color: white; }
 
-        main { height: 100%; display: flex; flex-direction: column; position: relative; overflow-y: auto; }
+        /* Main content - Centered */
+        main { 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; /* Vertical Center */
+            align-items: center;     /* Horizontal Center */
+            position: relative; 
+            overflow: hidden;        /* Prevents overall scroll */
+            padding-bottom: 50px;    /* Space for footer */
+        }
         #app-frame { width: 100%; flex-grow: 1; border: none; display: none; }
 
         /* Views */
-        .view-content { padding: 3rem; display: none; }
+        .view-content { 
+            padding: 2rem; 
+            display: none; 
+            width: 100%; 
+            max-width: 1200px; 
+            max-height: calc(100vh - 150px); 
+            overflow-y: auto; /* Internal scroll if content is too tall */
+        }
         .view-content.active { display: block; }
 
         /* Home Grid */
-        .readme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; padding-bottom: 80px; }
-        .readme-card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        .readme-card h3 { color: var(--primary); margin-top: 0; }
-        .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+        .readme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .readme-card { background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .readme-card h3 { color: var(--primary); margin-top: 0; font-size: 1.1rem; }
+        .readme-card ul { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
 
         /* Tool Grids */
-        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 20px; padding-bottom: 100px; }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; margin-top: 20px; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.2rem; }
+        .card h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.1rem; }
         .card p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.85rem; line-height: 1.5; }
 
         /* Password Specific Styles */
@@ -129,8 +146,8 @@
 
         <main>
             <div id="home-view" class="view-content active">
-                <header>
-                    <h2 style="font-size: 2rem; color: var(--text-dark);">Welcome to MultiAssist Suite</h2>
+                <header style="text-align: center;">
+                    <h2 style="font-size: 1.8rem; color: var(--text-dark); margin-bottom: 5px;">Welcome to MultiAssist Suite</h2>
                     <p style="color: var(--text-muted);">The all-in-one browser-based professional toolkit.</p>
                 </header>
 
@@ -167,32 +184,12 @@
                         </ul>
                         <button class="btn-launch" style="margin-top:15px" onclick="loadView('Converter')">Open App</button>
                     </div>
-
-                    <div class="readme-card">
-                        <h3>MoneySplit Buddy</h3>
-                        <p>Expense tracking and peer-to-peer settlement optimization tool.</p>
-                        <ul>
-                            <li>Track group expenses.</li>
-                            <li>Algorithm-based settlement plans.</li>
-                        </ul>
-                        <button class="btn-launch" onclick="loadView('MoneySplit')">Open App</button>
-                    </div>
-                    
-                    <div class="readme-card">
-                        <h3>Data Cleansing Pro</h3>
-                        <p>Standardize technical Excel/CSV data.</p>
-                        <ul>
-                            <li>Text & Date normalization.</li>
-                            <li>Regex Find & Replace.</li>
-                        </ul>
-                        <button class="btn-launch" style="margin-top:15px" onclick="loadView('DataCleansing')">Open App</button>
-                    </div>
                 </div>
             </div>
 
             <div id="PDFToolkit-view" class="view-content">
-                <header>
-                    <h2 style="font-size: 2rem; color: var(--text-dark);">📄 PDF Toolkit</h2>
+                <header style="text-align: center;">
+                    <h2 style="font-size: 1.8rem; color: var(--text-dark);">📄 PDF Toolkit</h2>
                     <p style="color: var(--text-muted);">Secure, local PDF processing.</p>
                 </header>
                 <div class="tool-grid">
@@ -220,12 +217,12 @@
             </div>
 
             <div id="PassGen-view" class="view-content">
-                <header>
-                    <h2 style="font-size: 2rem; color: var(--text-dark);">🔑 Password Vault</h2>
+                <header style="text-align: center;">
+                    <h2 style="font-size: 1.8rem; color: var(--text-dark);">🔑 Password Vault</h2>
                     <p style="color: var(--text-muted);">Convert text to secure 14-character passwords locally.</p>
                 </header>
                 
-                <div style="max-width: 500px; margin-top: 20px;">
+                <div style="max-width: 500px; margin: 20px auto 0 auto;">
                     <div class="card">
                         <label>1. INPUT TEXT (Max 20)</label>
                         <input type="text" id="masterInput" placeholder="Enter secret word" maxlength="20" oninput="updateStrength()">
@@ -390,8 +387,7 @@
             });
         }
 
-        // --- PDF TOOLKIT LOGIC ---
-        function downloadFile(bytes, filename) {
+        async function downloadFile(bytes, filename) {
             const blob = new Blob([bytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -423,7 +419,6 @@
             document.getElementById('protectStatus').innerText = "Protected successfully.";
         }
 
-        // --- VISITOR COUNTER ---
         async function initCounter() {
             const countDisplay = document.getElementById('visit-count');
             try {
